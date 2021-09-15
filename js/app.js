@@ -12,7 +12,7 @@ const showProducts = products => {
     const image = product.image;
     const div = document.createElement("div");
     div.classList.add("product");
-    div.innerHTML = `<div class="single-product">
+    div.innerHTML = `<div class="single-product h-100 g-4">
       <div>
     <img class="product-image" src=${image}></img>
       </div>
@@ -20,11 +20,30 @@ const showProducts = products => {
       <p>Category: ${product.category}</p>
       <h2>Price: $ ${product.price}</h2>
       <button onclick="addToCart(${product.id},${product.price})" id="addToCart-btn" class="buy-now btn btn-success">add to cart</button>
-      <button id="details-btn" class="btn btn-danger">Details</button></div>
+      <button onclick="showDetailsData()" class="btn btn-danger">Details</button></div>
       `;
     document.getElementById("all-products").appendChild(div);
   }
 };
+
+// show details data load
+const showDetailsData = () => {
+  fetch('https://fakestoreapi.com/products/1')
+    .then(res => res.json())
+    .then(data => showDetails(data))
+}
+// show details function .title.description
+const showDetails = card => {
+  console.log(card.image)
+  const div = document.getElementById('show-details');
+  div.innerHTML = `<div class="single-product h-100 g-4">
+  <div>
+<img class="product-image" src=${card.image}></img>
+  </div>
+  <h3>${card.title}</h3>
+  <p>Category: ${card.description}</p>
+  `;
+}
 let count = 0;
 const addToCart = (id, price) => {
   count = count + 1;
@@ -69,12 +88,13 @@ const updateTaxAndCharge = () => {
     setInnerText("total-tax", priceConverted * 0.4);
   }
 };
-
 //grandTotal update function
 const updateTotal = () => {
-  const grandTotal =
-    getInputValue("price") + getInputValue("delivery-charge") +
-    getInputValue("total-tax");
-  document.getElementById("total").innerText = grandTotal;
+  const grandTotal = document.getElementById("total");
+  const price = getInputValue("price");
+  const delivery = getInputValue("delivery-charge");
+  const tex = getInputValue("total-tax");
+  grandTotal.innerText = price + delivery + tex;
 };
 loadProducts();
+
